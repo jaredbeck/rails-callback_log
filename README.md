@@ -26,6 +26,10 @@ unset RAILS_CALLBACK_LOG_FILTER
 
 Filtering incurs a serious performance penalty, so it is off by default.
 
+## See Also
+
+- http://stackoverflow.com/q/13089936/567762
+
 ## License
 
 The gem is available as open source under the terms of the [MIT
