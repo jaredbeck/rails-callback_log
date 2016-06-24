@@ -22,11 +22,11 @@ if ::Gem::Requirement.new("~> 4.2.0").satisfied_by?(::Rails.gem_version)
       class Callback
         def make_lambda_with_log(filter)
           original_lambda = make_lambda_without_log(filter)
-          lambda { |*args|
+          lambda { |*args, &block|
             if caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
               ::Rails.logger.debug(format("Callback: %s", filter))
             end
-            original_lambda.call(*args)
+            original_lambda.call(*args, &block)
           }
         end
         alias_method_chain :make_lambda, :log
