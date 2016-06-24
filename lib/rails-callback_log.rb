@@ -1,6 +1,5 @@
 require "active_support/callbacks"
 require "rails_callback_log/version"
-require 'benchmark'
 
 module RailsCallbackLog
   class << self
