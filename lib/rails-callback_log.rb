@@ -2,6 +2,10 @@ require "active_support/callbacks"
 require "rails_callback_log/version"
 
 module RailsCallbackLog
+  # Filtering is very expensive. It makes my test suite more than 50%
+  # slower. So, it's off by default.
+  FILTER = ENV["RAILS_CALLBACK_LOG_FILTER"].present?.freeze
+
   class << self
     def matches_filter?(str)
       source_location_filters.any? { |f| str.start_with?(f) }
@@ -22,7 +26,8 @@ if ::Gem::Requirement.new("~> 4.2.0").satisfied_by?(::Rails.gem_version)
         def make_lambda_with_log(filter)
           original_lambda = make_lambda_without_log(filter)
           lambda { |*args, &block|
-            if caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
+            if !::RailsCallbackLog::FILTER ||
+                caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
               ::Rails.logger.debug(format("Callback: %s", filter))
             end
             original_lambda.call(*args, &block)
@@ -33,5 +38,8 @@ if ::Gem::Requirement.new("~> 4.2.0").satisfied_by?(::Rails.gem_version)
     end
   end
 else
-  warn "RailsCallbackLog does not support rails version: #{::Rails.gem_version}"
+  warn(
+    "RailsCallbackLog does not support rails #{::Rails.gem_version} but " \
+      "contributions are welcome!"
+  )
 end
