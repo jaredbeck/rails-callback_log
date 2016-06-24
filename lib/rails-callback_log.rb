@@ -1,11 +1,18 @@
 require "active_support/callbacks"
+require "rails_callback_log/version"
+require 'benchmark'
 
 module RailsCallbackLog
-  SOURCE_LOCATION_FILTERS = %w(app lib).map { |dir| (::Rails.root + dir).to_s }.freeze
-  VERSION = "0.0.1"
+  class << self
+    def matches_filter?(str)
+      source_location_filters.any? { |f| str.start_with?(f) }
+    end
 
-  def self.matches_filter?(str)
-    SOURCE_LOCATION_FILTERS.any? { |f| str.start_with?(f) }
+    private
+
+    def source_location_filters
+      @@filters ||= %w(app lib).map { |dir| (::Rails.root + dir).to_s }
+    end
   end
 end
 
@@ -17,7 +24,7 @@ if ::Gem::Requirement.new("~> 4.2.0").satisfied_by?(::Rails.gem_version)
           original_lambda = make_lambda_without_log(filter)
           lambda { |*args|
             if caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
-              ::Rails.logger.debug(format("Woo Callback: %s", filter))
+              ::Rails.logger.debug(format("Callback: %s", filter))
             end
             original_lambda.call(*args)
           }
@@ -27,5 +34,5 @@ if ::Gem::Requirement.new("~> 4.2.0").satisfied_by?(::Rails.gem_version)
     end
   end
 else
-  warn "ActiveSupportCallbackLog does not support rails version: #{::Rails.gem_version}"
+  warn "RailsCallbackLog does not support rails version: #{::Rails.gem_version}"
 end
