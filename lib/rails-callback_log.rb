@@ -1,5 +1,8 @@
-require "active_support/callbacks"
 require "rails_callback_log/version"
+
+# We expect `ActiveSupport::Callbacks::Callback#make_lambda` to be defined before we
+# continue, because we are going to overwrite it.
+require "active_support/all"
 
 module RailsCallbackLog
   # Filtering is very expensive. It makes my test suite more than 50%
@@ -17,29 +20,27 @@ module RailsCallbackLog
       @@filters ||= %w(app lib).map { |dir| (::Rails.root + dir).to_s }
     end
   end
-end
 
-if ::Gem::Requirement.new("~> 4.2.0").satisfied_by?(::Rails.gem_version)
-  module ActiveSupport
-    module Callbacks
-      class Callback
-        def make_lambda_with_log(filter)
-          original_lambda = make_lambda_without_log(filter)
-          lambda { |*args, &block|
-            if !::RailsCallbackLog::FILTER ||
-                caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
-              ::Rails.logger.debug(format("Callback: %s", filter))
-            end
-            original_lambda.call(*args, &block)
-          }
+  module CallbackExtension
+    # Return a lambda that wraps `ActiveSupport::Callbacks::Callback#make_lambda`,
+    # adding logging.
+    def make_lambda(filter)
+      original_lambda = super(filter)
+      lambda { |*args, &block|
+        if !::RailsCallbackLog::FILTER ||
+          caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
+          ::Rails.logger.debug(format("Callback: %s", filter))
         end
-        alias_method_chain :make_lambda, :log
-      end
+        original_lambda.call(*args, &block)
+      }
     end
   end
-else
-  warn(
-    "RailsCallbackLog does not support rails #{::Rails.gem_version} but " \
-      "contributions are welcome!"
-  )
+end
+
+module ActiveSupport
+  module Callbacks
+    class Callback
+      prepend ::RailsCallbackLog::CallbackExtension
+    end
+  end
 end
