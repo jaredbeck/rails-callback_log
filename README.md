@@ -2,7 +2,17 @@
 
 Do you have a rails app with a lot of callbacks? Are they kind of a mystery? Maybe logging them would help.
 
-![Screenshot of callbacks logged][1]
+```
+Started GET "/" for 127.0.0.1 at 2016-07-26 13:25:32 -0400
+Processing by HomeController#index as HTML
+Callback: verify_authenticity_token
+Callback: activate_authlogic
+Callback: require_client_subdomain
+  Client Load (0.4ms)  SELECT  `clients`.* ...
+Callback: check_hostname
+Callback: update_last_request_at
+...
+```
 
 ## Installation
 
@@ -36,5 +46,3 @@ Filtering incurs a serious performance penalty, so it is off by default.
 
 The gem is available as open source under the terms of the [MIT
 License](http://opensource.org/licenses/MIT).
-
-[1]: https://pbs.twimg.com/media/CoOlO4AWIAQLovT.jpg "Screenshot of callbacks logged"
