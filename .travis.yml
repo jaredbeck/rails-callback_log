@@ -1,9 +1,17 @@
-sudo: false
-language: ruby
-rvm:
-  - 1.9.3-p551
-  - 2.0.0-p648
-  - 2.1.10
-  - 2.2.5
-  - 2.3.1
 before_install: gem install bundler -v 1.12.5
+gemfile:
+  - gemfiles/as_4.2.gemfile
+  - gemfiles/as_5.0.gemfile
+  - gemfiles/as_5.1.gemfile
+language: ruby
+matrix:
+  fast_finish: true
+  exclude:
+    - gemfile: gemfiles/as_5.0.gemfile
+      rvm: 2.0.0-p648
+    - gemfile: gemfiles/as_5.1.gemfile
+      rvm: 2.0.0-p648
+rvm:
+  - 2.0.0-p648
+  - 2.4.1
+sudo: false

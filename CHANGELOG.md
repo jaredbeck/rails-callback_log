@@ -3,6 +3,12 @@
 This gem conforms to [semver 2.0.0][1] and follows the recommendations of
 [keepachangelog.com][2].
 
+### 0.2.0 (2017-04-01)
+
+Added:
+
+- Support for rails 5.1
+
 ### 0.1.0 (2016-07-25)
 
 Breaking changes:
