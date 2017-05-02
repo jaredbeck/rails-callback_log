@@ -9,18 +9,6 @@ module RailsCallbackLog
   FILTER = ENV["RAILS_CALLBACK_LOG_FILTER"].present?.freeze
 
   class << self
-    def assert_method_not_defined(klass, method)
-      if klass.method_defined?(method.to_sym)
-        $stderr.puts(
-          format(
-            "Unable to install rails-callback_log: method already exists: %s",
-            method
-          )
-        )
-        ::Kernel.exit(1)
-      end
-    end
-
     def matches_filter?(str)
       source_location_filters.any? { |f| str.start_with?(f) }
     end
@@ -32,32 +20,33 @@ module RailsCallbackLog
     end
   end
 
-  module CallbackExtension
-    def _rails_cb_log(caller, message)
-      if !::RailsCallbackLog::FILTER ||
-        caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
-        ::Rails.logger.debug(format("Callback: %s", message))
-      end
+  # In rails 5.1, we extend `CallTemplate`.
+  module CallTemplateExtension
+    # Returns a lambda that wraps `super`, adding logging.
+    def make_lambda
+      original_lambda = super
+      lambda { |*args, &block|
+        if !::RailsCallbackLog::FILTER ||
+          caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
+          ::Rails.logger.debug(format("Callback: %s", @method_name))
+        end
+        original_lambda.call(*args, &block)
+      }
     end
+  end
 
-    if ::ActiveSupport.gem_version >= ::Gem::Version.new("5.1.0")
-      # Returns a lambda that wraps `super`, adding logging.
-      def make_lambda
-        original_lambda = super
-        lambda { |*args, &block|
-          _rails_cb_log(caller, @method_name)
-          original_lambda.call(*args, &block)
-        }
-      end
-    else
-      # Returns a lambda that wraps `super`, adding logging.
-      def make_lambda(filter)
-        original_lambda = super(filter)
-        lambda { |*args, &block|
-          _rails_cb_log(caller, filter)
-          original_lambda.call(*args, &block)
-        }
-      end
+  # In rails 4.2 and 5.0, we extend `Callback`.
+  module CallbackExtension
+    # Returns a lambda that wraps `super`, adding logging.
+    def make_lambda(filter)
+      original_lambda = super(filter)
+      lambda { |*args, &block|
+        if !::RailsCallbackLog::FILTER ||
+          caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
+          ::Rails.logger.debug(format("Callback: %s", filter))
+        end
+        original_lambda.call(*args, &block)
+      }
     end
   end
 end
@@ -65,15 +54,11 @@ end
 # Install our `CallbackExtension` using module prepend.
 module ActiveSupport
   module Callbacks
-    # In rails 4.2 and 5.0, `make_lambda` is a method of `Callback`.
-    # In rails 5.1, `make_lambda` is a method of `CallTemplate`.
     if ::ActiveSupport.gem_version >= ::Gem::Version.new("5.1.0")
-      ::RailsCallbackLog.assert_method_not_defined(CallTemplate, :_rails_cb_log)
       class CallTemplate
-        prepend ::RailsCallbackLog::CallbackExtension
+        prepend ::RailsCallbackLog::CallTemplateExtension
       end
     else
-      ::RailsCallbackLog.assert_method_not_defined(Callback, :_rails_cb_log)
       class Callback
         prepend ::RailsCallbackLog::CallbackExtension
       end

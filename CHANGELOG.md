@@ -3,6 +3,12 @@
 This gem conforms to [semver 2.0.0][1] and follows the recommendations of
 [keepachangelog.com][2].
 
+### 0.2.1 (2017-04-02)
+
+Fixed:
+
+- Fix a performance issue introduced in 0.2.0
+
 ### 0.2.0 (2017-04-01)
 
 Added:
