@@ -7,10 +7,6 @@ module Rails
   def self.gem_version
     ::ActiveSupport.gem_version
   end
-
-  def self.logger
-    ::ActiveSupport::Logger.new(STDOUT)
-  end
 end
 
 require "rails-callback_log"
