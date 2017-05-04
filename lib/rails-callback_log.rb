@@ -9,6 +9,10 @@ module RailsCallbackLog
   FILTER = ENV["RAILS_CALLBACK_LOG_FILTER"].present?.freeze
 
   class << self
+    def logger
+      @_logger ||= ::Rails.logger || Logger.new(STDOUT)
+    end
+
     def matches_filter?(str)
       source_location_filters.any? { |f| str.start_with?(f) }
     end
@@ -28,7 +32,7 @@ module RailsCallbackLog
       lambda { |*args, &block|
         if !::RailsCallbackLog::FILTER ||
           caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
-          ::Rails.logger.debug(format("Callback: %s", @method_name))
+          ::RailsCallbackLog.logger.debug(format("Callback: %s", @method_name))
         end
         original_lambda.call(*args, &block)
       }
@@ -43,7 +47,7 @@ module RailsCallbackLog
       lambda { |*args, &block|
         if !::RailsCallbackLog::FILTER ||
           caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
-          ::Rails.logger.debug(format("Callback: %s", filter))
+          ::RailsCallbackLog.logger.debug(format("Callback: %s", filter))
         end
         original_lambda.call(*args, &block)
       }
