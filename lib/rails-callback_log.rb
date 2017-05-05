@@ -10,7 +10,7 @@ module RailsCallbackLog
 
   class << self
     def logger
-      @_logger ||= ::Rails.logger || Logger.new(STDOUT)
+      @_logger ||= ::Rails.logger || ::Logger.new(STDOUT)
     end
 
     def matches_filter?(str)
