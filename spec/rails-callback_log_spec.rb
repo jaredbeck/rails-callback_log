@@ -16,7 +16,7 @@ module ActiveSupport
             # Mock the rails logger. We're going to expect it to receive a `debug` message.
             logger = double
             allow(logger).to receive(:debug)
-            allow(::Rails).to receive(:logger).and_return(logger)
+            allow(::RailsCallbackLog).to receive(:logger).and_return(logger)
             target = double
 
             # Symbol-based callbacks have a `target` and a `value`. The definition of
