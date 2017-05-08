@@ -3,13 +3,54 @@
 This gem conforms to [semver 2.0.0][1] and follows the recommendations of
 [keepachangelog.com][2].
 
-### 0.2.1 (2017-04-02)
+### Unreleased
+
+Breaking Changes:
+
+- None
+
+Added:
+
+- None
+
+Fixed:
+
+- None
+
+### 0.2.2 (2017-05-08)
+
+Breaking Changes:
+
+- None
+
+Added:
+
+- None
+
+Fixed:
+
+- [#3](https://github.com/jaredbeck/rails-callback_log/pull/3)
+  Fallback to ::Logger if Rails::Logger not loaded
+
+### 0.2.1 (2017-05-02)
+
+Breaking Changes:
+
+- None
+
+Added:
+
+- None
 
 Fixed:
 
 - Fix a performance issue introduced in 0.2.0
 
-### 0.2.0 (2017-04-01)
+### 0.2.0 (2017-05-01)
+
+Breaking Changes:
+
+- None
 
 Added:
 
