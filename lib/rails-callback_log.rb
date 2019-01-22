@@ -17,6 +17,12 @@ module RailsCallbackLog
       source_location_filters.any? { |f| str.start_with?(f) }
     end
 
+    def log(msg)
+      if !FILTER || caller.any? { |line| matches_filter?(line) }
+        logger.debug(format("Callback: %s", msg))
+      end
+    end
+
     private
 
     def source_location_filters
@@ -26,16 +32,15 @@ module RailsCallbackLog
 
   # In rails 5.1, we extend `CallTemplate`.
   module CallTemplateExtension
-    # Returns a lambda that wraps `super`, adding logging.
-    def make_lambda
-      original_lambda = super
-      lambda { |*args, &block|
-        if !::RailsCallbackLog::FILTER ||
-          caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
-          ::RailsCallbackLog.logger.debug(format("Callback: %s", @method_name))
-        end
-        original_lambda.call(*args, &block)
-      }
+    # Rails 5.1 and above call `expand` to get a reference to the object and
+    # method of the callback to execute. If the callback was a proc then
+    # @override_block will be set. If the callback was an object then
+    # @override_target will be set. If the callback was a symbol method name
+    # then @method_name will be set.
+    def expand(target, value, block)
+      ::RailsCallbackLog.log(@override_block || @override_target || @method_name)
+
+      super(target, value, block)
     end
   end
 
@@ -45,10 +50,8 @@ module RailsCallbackLog
     def make_lambda(filter)
       original_lambda = super(filter)
       lambda { |*args, &block|
-        if !::RailsCallbackLog::FILTER ||
-          caller.any? { |line| ::RailsCallbackLog.matches_filter?(line) }
-          ::RailsCallbackLog.logger.debug(format("Callback: %s", filter))
-        end
+        ::RailsCallbackLog.log(filter)
+
         original_lambda.call(*args, &block)
       }
     end

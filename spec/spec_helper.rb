@@ -4,6 +4,10 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 # is loaded. We don't want to load all of rails just to run our tests, so we simply
 # define `::Rails.gem_version`.
 module Rails
+  class << self
+    attr_accessor :logger
+  end
+
   def self.gem_version
     ::ActiveSupport.gem_version
   end
