@@ -5,7 +5,7 @@ require "rails_callback_log/version"
 
 ::Gem::Specification.new do |spec|
   spec.name = "rails-callback_log"
-  spec.version = ::RailsCallbackLog::VERSION
+  spec.version = ::RailsCallbackLog.gem_version.to_s
   spec.authors = ["Jared Beck"]
   spec.email = ["jared@jaredbeck.com"]
   spec.summary = "Logs callbacks to help with debugging."
