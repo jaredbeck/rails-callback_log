@@ -1,9 +1,7 @@
 require "rubygems"
 
 module RailsCallbackLog
-  VERSION = "0.2.2"
-
   def self.gem_version
-    ::Gem::Version.new(VERSION)
+    ::Gem::Version.new('0.3.0')
   end
 end

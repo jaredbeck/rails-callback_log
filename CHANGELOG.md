@@ -17,6 +17,21 @@ Fixed:
 
 - None
 
+### 0.3.0 (2019-01-29)
+
+Breaking Changes:
+
+- Drop `RailsCallbackLog::VERSION`, use `RailsCallbackLog.gem_version`
+
+Added:
+
+- Support rails 5.2
+
+Fixed:
+
+- [#5](https://github.com/jaredbeck/rails-callback_log/pull/5)
+  Huge improvements to output in rails > 5.1
+
 ### 0.2.2 (2017-05-08)
 
 Breaking Changes:
