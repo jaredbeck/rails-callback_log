@@ -7,15 +7,7 @@ gemfile:
 language: ruby
 matrix:
   fast_finish: true
-  exclude:
-    - gemfile: gemfiles/as_5.0.gemfile
-      rvm: 2.0.0-p648
-    - gemfile: gemfiles/as_5.1.gemfile
-      rvm: 2.0.0-p648
-    - gemfile: gemfiles/as_5.2.gemfile
-      rvm: 2.0.0-p648
 rvm:
-  - 2.0.0-p648
   - 2.4
   - 2.5
   - 2.6
