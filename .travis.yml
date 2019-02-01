@@ -3,6 +3,7 @@ gemfile:
   - gemfiles/as_4.2.gemfile
   - gemfiles/as_5.0.gemfile
   - gemfiles/as_5.1.gemfile
+  - gemfiles/as_5.2.gemfile
 language: ruby
 matrix:
   fast_finish: true
@@ -11,7 +12,11 @@ matrix:
       rvm: 2.0.0-p648
     - gemfile: gemfiles/as_5.1.gemfile
       rvm: 2.0.0-p648
+    - gemfile: gemfiles/as_5.2.gemfile
+      rvm: 2.0.0-p648
 rvm:
   - 2.0.0-p648
-  - 2.4.1
+  - 2.4
+  - 2.5
+  - 2.6
 sudo: false
