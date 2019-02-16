@@ -60,7 +60,7 @@ describe RailsCallbackLog do
       CallbackTester.new.save
 
       expect(filtered_log).to include "Callback: #<Proc:"
-      expect(filtered_log).to include "Callback: around_callback"
+      expect(filtered_log).to include "Callback: :around_callback"
       expect(filtered_log).to include "Callback: #<CallbackWrapper:"
     end
   end

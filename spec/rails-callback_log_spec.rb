@@ -27,7 +27,7 @@ module ActiveSupport
 
             # Call our lambda and expect it to send a debug message to our mock logger.
             lambda_with_log.call(target, :kiwi)
-            expect(logger).to have_received(:debug).once.with("Callback: banana")
+            expect(logger).to have_received(:debug).once.with("Callback: :banana")
             expect(target).to have_received(:banana).once
           end
         end

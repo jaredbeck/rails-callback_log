@@ -19,7 +19,7 @@ module RailsCallbackLog
 
     def log(msg)
       if !FILTER || caller.any? { |line| matches_filter?(line) }
-        logger.debug(format("Callback: %s", msg))
+        logger.debug(format("Callback: %s", msg.inspect))
       end
     end
 
