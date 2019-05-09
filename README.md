@@ -38,6 +38,17 @@ unset RAILS_CALLBACK_LOG_FILTER
 
 Filtering incurs a serious performance penalty, so it is off by default.
 
+## Logging only upon opt-in
+When working in a team and logging is needed only for select members, use this environment-based opt-in pattern:
+
+```rb
+# in Gemfile
+gem "rails-callback_log", group: [:development, :test], require: false
+
+# in some config/initializers/callback_log.rb
+require "rails-callback_log" if ENV["LOG_RAILS_CALLBACKS"] == "true"
+```
+
 ## See Also
 
 - http://stackoverflow.com/q/13089936/567762
