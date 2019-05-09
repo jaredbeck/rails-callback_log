@@ -1,4 +1,9 @@
-before_install: gem install bundler -v 1.12.5
+# Travis defaults to having Bundler version 2 installed. To support Rails 4.2
+# we have to use Bundler 1.x. We need to uninstall the preinstalled version
+# from RVMs global gemset first.
+before_install:
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem install bundler -v '< 2'
 gemfile:
   - gemfiles/as_4.2.gemfile
   - gemfiles/as_5.0.gemfile
