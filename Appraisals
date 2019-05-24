@@ -7,10 +7,6 @@
 # > the version from the appraisal takes precedence.
 # > https://github.com/thoughtbot/appraisal
 
-appraise "as-4.2" do
-  gem "activesupport", "~> 4.2.0"
-end
-
 appraise "as-5.0" do
   gem "activesupport", "~> 5.0.0"
 end

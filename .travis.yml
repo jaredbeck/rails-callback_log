@@ -1,6 +1,4 @@
-before_install: gem install bundler -v 1.12.5
 gemfile:
-  - gemfiles/as_4.2.gemfile
   - gemfiles/as_5.0.gemfile
   - gemfiles/as_5.1.gemfile
   - gemfiles/as_5.2.gemfile
