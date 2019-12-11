@@ -17,6 +17,20 @@ Fixed:
 
 - None
 
+### 0.3.1 (2019-12-11)
+
+Breaking Changes:
+
+- None
+
+Added:
+
+- Relax dependency constraint on activesupport, removing upper bound
+
+Fixed:
+
+- None
+
 ### 0.3.0 (2019-01-29)
 
 Breaking Changes:
