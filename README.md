@@ -28,7 +28,7 @@ Do not use this gem in production because it adds significant overhead.
 Rails has a lot of its own callbacks that you probably don't care about. If you
 don't want to log them, enable filtering.
 
-```
+```bash
 # Enable filtering
 export RAILS_CALLBACK_LOG_FILTER="make it so"
 
@@ -38,15 +38,16 @@ unset RAILS_CALLBACK_LOG_FILTER
 
 Filtering incurs a serious performance penalty, so it is off by default.
 
-## Logging only upon opt-in
-When working in a team and logging is needed only for select members, use this environment-based opt-in pattern:
+## Team Opt-in
 
-```rb
-# in Gemfile
-gem "rails-callback_log", group: [:development, :test], require: false
+When working in a team and logging is needed only for select members, use this
+environment-based opt-in pattern:
 
-# in some config/initializers/callback_log.rb
-require "rails-callback_log" if ENV["LOG_RAILS_CALLBACKS"] == "true"
+```ruby
+# Gemfile
+gem "rails-callback_log",
+  group: [:development, :test],
+  require: (ENV["LOG_RAILS_CALLBACKS"] == "true")
 ```
 
 ## See Also
